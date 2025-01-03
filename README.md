@@ -1,6 +1,6 @@
 # Stories From A Stranger
 
-Every day, more than 8 billion people experience life in their own unqiue way. _Stories From A Stranger_ is an interactive platform that allows **YOU** (yes YOU) to see the world through someone else's eyes by reading their story. Each person has a story to tell and we're here to listen.
+Every day, more than 8 billion people experience life in their own unqiue way. _Stories From A Stranger_ is an interactive platform that allows you to see the world through someone else's eyes by reading their story. Everyone has a story and we are here to listen.
 
 ## About
 
