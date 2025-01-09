@@ -61,11 +61,13 @@ async function postNewStory(content) {
 }
 
 exports.handler = async (event, context) => {
-  console.log(event, content);
-  if (event.method === "POST") {
-    await postNewStory(context);
+  console.log(event);
+
+  if (event.httpMethod === "POST") {
+    const data = JSON.parse(event.body);
+    await postNewStory(data);
     return { statusCode: 200, headers: { "Content-Type": "application/json" } };
-  } else if (event.method === "GET") {
+  } else if (event.httpMethod === "GET") {
     try {
       const randomDoc = await getRandomDocument();
 
