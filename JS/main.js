@@ -40,6 +40,24 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  async function postNewStory(content) {
+    try {
+      const response = await fetch("/.netlify/functions/databaseHandle", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(content),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   setRandomPlaceholder();
 
   noteForm.addEventListener("submit", async (event) => {
@@ -52,11 +70,11 @@ document.addEventListener("DOMContentLoaded", () => {
       submitButton.classList.add("loading");
       submitButton.disabled = true;
 
-      // Fake API Calls For Now
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      await postNewStory({ NoteContent: content, Signed: author });
 
       noteContent.value = "";
       noteSignature.value = "";
+
       submitButton.classList.remove("loading");
       submitButton.classList.add("success");
 
@@ -71,7 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
     rerollButton.classList.add("loading");
     rerollButton.disabled = true;
 
-    randomStoryData = await getRandomStory();
+    const randomStoryData = await getRandomStory();
 
     noteText.textContent = randomStoryData.NoteContent;
     noteAuthor.textContent = `- ${randomStoryData.Signed}`;

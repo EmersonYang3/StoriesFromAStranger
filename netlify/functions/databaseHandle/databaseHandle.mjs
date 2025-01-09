@@ -39,7 +39,33 @@ async function getRandomDocument() {
   }
 }
 
+async function postNewStory(content) {
+  const uri = process.env.MONGODB_URI;
+
+  const client = new MongoClient(uri);
+
+  try {
+    await client.connect();
+    const database = client.db("NotesDB");
+    const collection = database.collection("Notes");
+
+    await collection.insertOne({
+      NoteContent: content.NoteContent,
+      Signed: content.Signed,
+    });
+  } catch (error) {
+    console.log(error);
+  } finally {
+    await client.close();
+  }
+}
+
 exports.handler = async (event, context) => {
+  if (event.method === "POST") {
+    await postNewStory(context);
+    return { statusCode: 200, headers: { "Content-Type": "application/json" } };
+  }
+
   try {
     const randomDoc = await getRandomDocument();
 
