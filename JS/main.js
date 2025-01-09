@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function getRandomStory() {
     try {
-      const response = await fetch("./netlify/functions/databaseHandle");
+      const response = await fetch("/.netlify/functions/databaseHandle");
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
