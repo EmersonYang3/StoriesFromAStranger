@@ -4,7 +4,7 @@ Every day, 8 billion people experience life in their own unique way. _Notes From
 
 ## About
 
-**Notes From A Stranger** is a place where you can read random notes and write your own. All notes are anonymous by default, but you have the option to sign them with a name of your choosing. For the time being, all notes have a 1 view expiration.
+**Notes From A Stranger** is a place where you can read random notes and write your own. All notes are anonymous by default, but you have the option to sign them with a name of your choosing. For the time being, all notes are permanant, if there's a influx of users I will add a view expiration in the future!
 
 ## Inspiration
 
@@ -28,8 +28,4 @@ Thank you for being a part of this journey!
 - Daily Questions (prompts such as the ones from Hunter Prosper) >> **TBD** <<
 - Custom View Expiration >> **TBD** <<
 - Additional Features >> **TBD**
-
-
-# Notes From A Stranger
-
-Every day, 8 billion people experience life in their own unique way. _Notes From A Stranger_ is an interactive platform that allows you to see the world through someone else's eyes.
+- Likes and Reporting for Stories >> **TBD** <<

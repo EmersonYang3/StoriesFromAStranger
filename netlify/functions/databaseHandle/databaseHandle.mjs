@@ -24,7 +24,7 @@ async function getRandomDocument() {
 
     if (randomDocs.length > 0) {
       const randomDoc = randomDocs[0];
-      await collection.deleteOne({ _id: randomDoc._id });
+      // await collection.deleteOne({ _id: randomDoc._id });
       return randomDoc;
     } else {
       return {
