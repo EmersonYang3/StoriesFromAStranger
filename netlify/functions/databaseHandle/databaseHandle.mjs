@@ -26,10 +26,8 @@ async function getRandomDocument() {
 
     if (randomDocs.length > 0) {
       const randomDoc = randomDocs[0];
-      console.log(`Random document: ${JSON.stringify(randomDoc)}`);
       return randomDoc;
     } else {
-      console.log("No document found");
       return { error: "No document found" };
     }
   } catch (error) {
@@ -43,7 +41,6 @@ async function getRandomDocument() {
 exports.handler = async (event, context) => {
   try {
     const randomDoc = await getRandomDocument();
-    console.log(`Response document: ${JSON.stringify(randomDoc)}`);
 
     return {
       statusCode: 200,

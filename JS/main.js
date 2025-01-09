@@ -34,7 +34,6 @@ document.addEventListener("DOMContentLoaded", () => {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       const data = await response.json();
-
       return data;
     } catch (error) {
       console.log(error);
@@ -73,6 +72,8 @@ document.addEventListener("DOMContentLoaded", () => {
     rerollButton.disabled = true;
 
     randomStoryData = getRandomStory();
+
+    console.log(randomStoryData);
 
     noteText.textContent = randomStoryData.NoteContent;
     noteAuthor.textContent = `- ${randomStoryData.Signed}`;
