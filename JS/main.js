@@ -73,8 +73,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     randomStoryData = await getRandomStory();
 
-    console.log(randomStoryData);
-
     noteText.textContent = randomStoryData.NoteContent;
     noteAuthor.textContent = `- ${randomStoryData.Signed}`;
     noteDisplay.scrollTop = 0;
