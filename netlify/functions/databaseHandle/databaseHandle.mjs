@@ -1,12 +1,11 @@
-import { config } from "dotenv";
-import { MongoClient } from "mongodb";
+const dotenv = require("dotenv");
+const { MongoClient } = require("mongodb");
 
-config();
+dotenv.config();
 
-export default async (request, context) => {
+async function getRandomDocument() {
   const uri = process.env.MONGODB_URI;
 
-  // Create a new MongoClient
   const client = new MongoClient(uri);
 
   try {
@@ -14,44 +13,47 @@ export default async (request, context) => {
     const database = client.db("NotesDB");
     const collection = database.collection("Notes");
 
-    const method = request.method;
-    let responseMessage;
+    const count = await collection.countDocuments();
+    const randomIndex = Math.floor(Math.random() * count);
 
-    if (method === "GET") {
-      const count = await collection.countDocuments();
-      const randomIndex = Math.floor(Math.random() * count);
-      const randomDocs = await collection
-        .find()
-        .skip(randomIndex)
-        .limit(1)
-        .toArray();
+    const randomDocs = await collection
+      .find()
+      .skip(randomIndex)
+      .limit(1)
+      .toArray();
 
-      if (randomDocs.length > 0) {
-        const randomDoc = randomDocs[0];
-        responseMessage = {
-          NoteContent: randomDoc.NoteContent,
-          Author: randomDoc.Signed,
-        };
-        // await collection.deleteOne({ _id: randomDoc._id });
-      } else {
-        responseMessage = { error: "No document found" };
-      }
-    } else if (method === "POST") {
-      console.log("POST!");
-      responseMessage = { message: "POST request received" };
+    if (randomDocs.length > 0) {
+      const randomDoc = randomDocs[0];
+      console.log(`Random document: ${JSON.stringify(randomDoc)}`);
+      return randomDoc;
     } else {
-      responseMessage = { error: "Unsupported request method" };
+      console.log("No document found");
+      return { error: "No document found" };
     }
-
-    return new Response(JSON.stringify(responseMessage), {
-      headers: { "Content-Type": "application/json" },
-    });
   } catch (error) {
-    return new Response(JSON.stringify({ error: error.toString() }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
+    console.error(`Error: ${error.toString()}`);
+    return { error: error.toString() };
   } finally {
     await client.close();
+  }
+}
+
+exports.handler = async (event, context) => {
+  try {
+    const randomDoc = await getRandomDocument();
+    console.log(`Response document: ${JSON.stringify(randomDoc)}`);
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify(randomDoc),
+      headers: { "Content-Type": "application/json" },
+    };
+  } catch (error) {
+    console.error(`Error: ${error.toString()}`);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: error.toString() }),
+      headers: { "Content-Type": "application/json" },
+    };
   }
 };
