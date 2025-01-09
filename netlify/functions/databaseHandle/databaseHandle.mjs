@@ -61,25 +61,26 @@ async function postNewStory(content) {
 }
 
 exports.handler = async (event, context) => {
+  console.log(event, content);
   if (event.method === "POST") {
     await postNewStory(context);
     return { statusCode: 200, headers: { "Content-Type": "application/json" } };
-  }
+  } else if (event.method === "GET") {
+    try {
+      const randomDoc = await getRandomDocument();
 
-  try {
-    const randomDoc = await getRandomDocument();
-
-    return {
-      statusCode: 200,
-      body: JSON.stringify(randomDoc),
-      headers: { "Content-Type": "application/json" },
-    };
-  } catch (error) {
-    console.error(`Error: ${error.toString()}`);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: error.toString() }),
-      headers: { "Content-Type": "application/json" },
-    };
+      return {
+        statusCode: 200,
+        body: JSON.stringify(randomDoc),
+        headers: { "Content-Type": "application/json" },
+      };
+    } catch (error) {
+      console.error(`Error: ${error.toString()}`);
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ error: error.toString() }),
+        headers: { "Content-Type": "application/json" },
+      };
+    }
   }
 };
