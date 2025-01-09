@@ -16,5 +16,11 @@ Thank you for being a part of this journey!
 
 ## Version
 
-**v1.0.0**
-- Coming Soon!
+**v1.0.0** - Release 1/9/25
+- UI Overhaul (still looks really bad though ._. I'll most likely change that in the future)
+- Database Integration (MongoDB)
+- Post Your Story
+- Read Stories from others!
+
+## Future Updates
+- TBD
