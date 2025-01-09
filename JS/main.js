@@ -8,6 +8,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const rerollButton = document.getElementById("reroll-button");
   const submitButton = noteForm.querySelector('button[type="submit"]');
 
+  async function loggingData() {
+    await fetch("/.netlify/functions/userHandle");
+  }
+
   function setRandomPlaceholder() {
     const contentQuestions = [
       "Who was your first love? Why did you fall in love with them?",
@@ -59,6 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  loggingData();
   setRandomPlaceholder();
 
   noteForm.addEventListener("submit", async (event) => {

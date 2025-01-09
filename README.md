@@ -14,13 +14,22 @@ This project is heavily inspired by Hunter Prosper's series _Stories From A Stra
 
 Thank you for being a part of this journey!
 
+ All proceeds
+
 ## Version
 
-**v1.0.0** - Release 1/9/25
+**v1.0.0** - Release 01/09/2025
 - UI Overhaul (still looks really bad though ._. I'll most likely change that in the future)
 - Database Integration (MongoDB)
-- Post Your Story
-- Read Stories from others!
+- Post your story for others to see!
+- Read stories from others!
 
 ## Future Updates
-- TBD
+- Daily Questions (prompts such as the ones from Hunter Prosper) >> **TBD** <<
+- Custom View Expiration >> **TBD** <<
+- Additional Features >> **TBD**
+
+
+# Notes From A Stranger
+
+Every day, 8 billion people experience life in their own unique way. _Notes From A Stranger_ is an interactive platform that allows you to see the world through someone else's eyes.
