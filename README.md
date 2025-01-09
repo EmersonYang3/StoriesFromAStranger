@@ -14,8 +14,6 @@ This project is heavily inspired by Hunter Prosper's series _Stories From A Stra
 
 Thank you for being a part of this journey!
 
- All proceeds
-
 ## Version
 
 **v1.0.0** - Release 01/09/2025
