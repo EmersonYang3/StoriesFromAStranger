@@ -29,7 +29,11 @@ async function getRandomDocument() {
       await collection.deleteOne({ _id: randomDoc._id });
       return randomDoc;
     } else {
-      return { error: "No document found" };
+      return {
+        NoteContent:
+          "Hey! Sorry it seems like there's no stories at the moment. Try posting a stories of your own or try again later, thanks!!!",
+        Signed: "LucilleLovesMelodie <3",
+      };
     }
   } catch (error) {
     console.error(`Error: ${error.toString()}`);
