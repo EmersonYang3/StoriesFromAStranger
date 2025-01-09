@@ -29,7 +29,7 @@ async function getRandomDocument() {
     } else {
       return {
         NoteContent:
-          "Hey! Sorry it seems like there's no stories at the moment. Try posting a stories of your own or try again later, thanks!!!",
+          "Hey! Sorry it seems like there's no stories at the moment. Try posting a story of your own or try again later, thanks!!!",
         Signed: "LucilleLovesMelodie <3",
       };
     }
