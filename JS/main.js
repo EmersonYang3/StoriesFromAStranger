@@ -83,6 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       submitButton.classList.remove("success");
       submitButton.disabled = false;
+      setRandomPlaceholder();
     }
   });
 
