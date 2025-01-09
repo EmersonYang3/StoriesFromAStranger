@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
     rerollButton.classList.add("loading");
     rerollButton.disabled = true;
 
-    randomStoryData = getRandomStory();
+    randomStoryData = await getRandomStory();
 
     console.log(randomStoryData);
 
