@@ -34,21 +34,22 @@ export default async (request, context) => {
         };
         // await collection.deleteOne({ _id: randomDoc._id });
       } else {
-        responseMessage = "No document found";
+        responseMessage = { error: "No document found" };
       }
     } else if (method === "POST") {
       console.log("POST!");
-      responseMessage = "POST request received";
+      responseMessage = { message: "POST request received" };
     } else {
-      responseMessage = "Unsupported request method";
+      responseMessage = { error: "Unsupported request method" };
     }
 
     return new Response(JSON.stringify(responseMessage), {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    return new Response(error.toString(), {
+    return new Response(JSON.stringify({ error: error.toString() }), {
       status: 500,
+      headers: { "Content-Type": "application/json" },
     });
   } finally {
     await client.close();
