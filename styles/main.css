@@ -1,3 +1,4 @@
+/* css is a bit disorganied I'll prob fix later... maybe...*/
 :root {
     --bg-color: #0a0a0a;
     --text-color: #ffffff;
@@ -208,7 +209,13 @@ body {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  height: 48px; /* Match the height of the reroll button */
+  height: 48px;
+}
+
+#reroll-button {
+    width: 80%;
+    height: 100%;
+    margin-right: 10px;
 }
 
 .btn-action span {
@@ -410,6 +417,7 @@ body {
     .btn {
         width: 100%;
     }
+
     .section-container {
         transform: none !important;
         transition: none !important;
