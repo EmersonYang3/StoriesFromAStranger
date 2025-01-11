@@ -76,10 +76,14 @@ async function updateVote(noteId, voteType) {
       { returnDocument: "after" }
     );
 
-    return {
-      upvotes: result.value.upvotes,
-      downvotes: result.value.downvotes,
-    };
+    if (result.value) {
+      return {
+        upvotes: result.value.upvotes,
+        downvotes: result.value.downvotes,
+      };
+    } else {
+      return { error: "Note not found" };
+    }
   } catch (error) {
     console.log(error);
     throw error;
