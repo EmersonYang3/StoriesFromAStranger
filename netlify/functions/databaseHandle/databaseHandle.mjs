@@ -75,16 +75,14 @@ async function updateVote(noteId, voteType) {
       { returnDocument: "after" }
     );
 
-    console.log("Result of findOneAndUpdate:", result);
-
-    if (result.value) {
-      console.log("Updated document:", result.value);
+    if (result && result.value) {
       return {
         upvotes: result.value.upvotes,
         downvotes: result.value.downvotes,
       };
     } else {
-      return { error: "Note not found" };
+      console.error("Note not found or update error.");
+      return { error: "Note not found or update error." };
     }
   } catch (error) {
     console.log(error);
