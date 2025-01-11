@@ -18,6 +18,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const sectionContainers = document.querySelectorAll(".section-container");
 
   let currentNoteId = null;
+  let updateNoteId = null;
+  let vote = "None";
+  let flagged = false;
 
   function updateViewExpiration(change) {
     let value = parseInt(viewExpiration.value, 10) || 0;
@@ -73,6 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       const data = await response.json();
+      flagged = false;
       return data;
     } catch (error) {
       console.log(error);
@@ -100,9 +104,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function handleVote(type) {
     if (!currentNoteId) return;
+    if (type === vote) return;
 
     const button = type === "upvote" ? upvoteButton : downvoteButton;
     const oppositeButton = type === "upvote" ? downvoteButton : upvoteButton;
+    type = vote;
 
     button.classList.add("loading");
     button.disabled = true;
@@ -135,7 +141,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function handleFlag() {
-    if (!currentNoteId) return;
+    if (!currentNoteId || flagged) return;
 
     flagButton.classList.add("loading");
     flagButton.disabled = true;
@@ -153,6 +159,7 @@ document.addEventListener("DOMContentLoaded", () => {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
 
+      flagged = true;
       alert("Note has been flagged for review.");
     } catch (error) {
       console.error("Error flagging note:", error);
