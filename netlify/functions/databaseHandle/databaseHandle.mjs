@@ -22,7 +22,22 @@ async function getRandomDocument() {
       .toArray();
 
     if (randomDocs.length > 0) {
-      return randomDocs[0];
+      const doc = randomDocs[0];
+
+      const updatedDoc = await collection.findOneAndUpdate(
+        { _id: doc._id },
+        { $inc: { views: 1 } },
+        { returnDocument: "after" }
+      );
+
+      if (
+        updatedDoc.value.views >= updatedDoc.value.ViewExpiration &&
+        updatedDoc.value.ViewExpiration > 0
+      ) {
+        await collection.deleteOne({ _id: doc._id });
+      }
+
+      return updatedDoc.value;
     } else {
       return {
         NoteContent:
@@ -46,6 +61,7 @@ async function postNewStory(content) {
       NoteContent: content.NoteContent,
       Signed: content.Signed,
       ViewExpiration: content.ViewExpiration,
+      views: 0,
       upvotes: 0,
       downvotes: 0,
     });
@@ -57,7 +73,7 @@ async function postNewStory(content) {
   }
 }
 
-async function updateVote(noteId, voteType) {
+async function updateVote(noteId, voteType, flipped) {
   try {
     await client.connect();
     const database = client.db("NotesDB");
@@ -66,12 +82,15 @@ async function updateVote(noteId, voteType) {
     const updateField = voteType === "upvote" ? "upvotes" : "downvotes";
     const oppositeField = voteType === "upvote" ? "downvotes" : "upvotes";
 
+    const update = { $inc: { [updateField]: 1 } };
+
+    if (flipped) {
+      update.$inc[oppositeField] = -1;
+    }
+
     const result = await collection.findOneAndUpdate(
       { _id: new ObjectId(noteId) },
-      {
-        $inc: { [updateField]: 1 },
-        $inc: { [oppositeField]: -1 },
-      },
+      update,
       { returnDocument: "after" }
     );
 
@@ -119,7 +138,7 @@ exports.handler = async (event, context) => {
     const data = JSON.parse(event.body);
 
     if (data.action === "upvote" || data.action === "downvote") {
-      const result = await updateVote(data.noteId, data.action);
+      const result = await updateVote(data.noteId, data.action, data.flipped);
       return {
         statusCode: 200,
         body: JSON.stringify(result),

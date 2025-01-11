@@ -103,7 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function handleVote(type) {
     if (!currentNoteId) return;
-    if (type === currentVote) return;
+    const flipped = currentVote && currentVote !== type;
 
     const button = type === "upvote" ? upvoteButton : downvoteButton;
     const oppositeButton = type === "upvote" ? downvoteButton : upvoteButton;
@@ -117,7 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ action: type, noteId: currentNoteId }),
+        body: JSON.stringify({ action: type, noteId: currentNoteId, flipped }),
       });
 
       if (!response.ok) {
