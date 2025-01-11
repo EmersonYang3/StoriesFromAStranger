@@ -18,7 +18,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const sectionContainers = document.querySelectorAll(".section-container");
 
   let currentNoteId = null;
-  let updateNoteId = null;
   let vote = "None";
   let flagged = false;
 
@@ -77,6 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       const data = await response.json();
       flagged = false;
+      vote = "None";
       return data;
     } catch (error) {
       console.log(error);
@@ -108,7 +108,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const button = type === "upvote" ? upvoteButton : downvoteButton;
     const oppositeButton = type === "upvote" ? downvoteButton : upvoteButton;
-    type = vote;
 
     button.classList.add("loading");
     button.disabled = true;
@@ -132,6 +131,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
       button.classList.add("active");
       oppositeButton.classList.remove("active");
+
+      vote = type;
     } catch (error) {
       console.error("Error voting:", error);
     } finally {
