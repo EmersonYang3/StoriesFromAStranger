@@ -22,8 +22,13 @@ Thank you for being a part of this journey!
 - Post your story for others to see!
 - Read stories from others!
 
+**v1.1.0** - Release 01/10/2025
+- New 3D Ui feature! (disbaled on mobile devices sorry!)
+- Upvote note
+- Downvote note
+- Flag vote (sends me a discord webhook with the contents!)
+- Custom view expiration!
+
 ## Future Updates
 - Daily Questions (prompts such as the ones from Hunter Prosper) >> **TBD** <<
-- Custom View Expiration >> **TBD** <<
 - Additional Features >> **TBD**
-- Likes and Reporting for Stories >> **TBD** <<

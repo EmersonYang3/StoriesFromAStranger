@@ -1,6 +1,5 @@
 const dotenv = require("dotenv");
 const { MongoClient, ObjectId } = require("mongodb");
-const fetch = require("node-fetch");
 
 dotenv.config();
 
@@ -76,7 +75,10 @@ async function updateVote(noteId, voteType) {
       { returnDocument: "after" }
     );
 
+    console.log("Result of findOneAndUpdate:", result);
+
     if (result.value) {
+      console.log("Updated document:", result.value);
       return {
         upvotes: result.value.upvotes,
         downvotes: result.value.downvotes,
