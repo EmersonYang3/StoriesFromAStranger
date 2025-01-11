@@ -91,7 +91,6 @@ async function flagNote(noteId) {
     await client.connect();
     const database = client.db("NotesDB");
     const collection = database.collection("Notes");
-    sdadsad;
     const note = await collection.findOne({ _id: ObjectId(noteId) });
 
     const webhookUrl = process.env.DiscoHookURL;
