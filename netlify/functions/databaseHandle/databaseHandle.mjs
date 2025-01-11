@@ -1,13 +1,13 @@
 const dotenv = require("dotenv");
-const { MongoClient } = require("mongodb");
+const { MongoClient, ObjectId } = require("mongodb");
+const fetch = require("node-fetch");
 
 dotenv.config();
 
+const uri = process.env.MONGODB_URI;
+const client = new MongoClient(uri);
+
 async function getRandomDocument() {
-  const uri = process.env.MONGODB_URI;
-
-  const client = new MongoClient(uri);
-
   try {
     await client.connect();
     const database = client.db("NotesDB");
@@ -23,9 +23,7 @@ async function getRandomDocument() {
       .toArray();
 
     if (randomDocs.length > 0) {
-      const randomDoc = randomDocs[0];
-      // await collection.deleteOne({ _id: randomDoc._id });
-      return randomDoc;
+      return randomDocs[0];
     } else {
       return {
         NoteContent:
@@ -36,29 +34,83 @@ async function getRandomDocument() {
   } catch (error) {
     console.error(`Error: ${error.toString()}`);
     return { error: error.toString() };
-  } finally {
-    await client.close();
   }
 }
 
 async function postNewStory(content) {
-  const uri = process.env.MONGODB_URI;
-
-  const client = new MongoClient(uri);
-
   try {
     await client.connect();
     const database = client.db("NotesDB");
     const collection = database.collection("Notes");
 
-    await collection.insertOne({
+    const result = await collection.insertOne({
       NoteContent: content.NoteContent,
       Signed: content.Signed,
+      ViewExpiration: content.ViewExpiration,
+      upvotes: 0,
+      downvotes: 0,
     });
+
+    return result;
   } catch (error) {
     console.log(error);
-  } finally {
-    await client.close();
+    throw error;
+  }
+}
+
+async function updateVote(noteId, voteType) {
+  try {
+    await client.connect();
+    const database = client.db("NotesDB");
+    const collection = database.collection("Notes");
+
+    const updateField = voteType === "upvote" ? "upvotes" : "downvotes";
+    const oppositeField = voteType === "upvote" ? "downvotes" : "upvotes";
+
+    const result = await collection.findOneAndUpdate(
+      { _id: ObjectId(noteId) },
+      {
+        $inc: { [updateField]: 1 },
+        $set: { [oppositeField]: 0 },
+      },
+      { returnDocument: "after" }
+    );
+
+    return {
+      upvotes: result.value.upvotes,
+      downvotes: result.value.downvotes,
+    };
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+async function flagNote(noteId) {
+  try {
+    await client.connect();
+    const database = client.db("NotesDB");
+    const collection = database.collection("Notes");
+    sdadsad;
+    const note = await collection.findOne({ _id: ObjectId(noteId) });
+
+    const webhookUrl = process.env.DiscoHookURL;
+    const message = {
+      content: `A note has been flagged:\nID: ${noteId}\nContent: ${note.NoteContent}\nAuthor: ${note.Signed}`,
+    };
+
+    await fetch(webhookUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(message),
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.log(error);
+    throw error;
   }
 }
 
@@ -67,8 +119,29 @@ exports.handler = async (event, context) => {
 
   if (event.httpMethod === "POST") {
     const data = JSON.parse(event.body);
-    await postNewStory(data);
-    return { statusCode: 200, headers: { "Content-Type": "application/json" } };
+
+    if (data.action === "upvote" || data.action === "downvote") {
+      const result = await updateVote(data.noteId, data.action);
+      return {
+        statusCode: 200,
+        body: JSON.stringify(result),
+        headers: { "Content-Type": "application/json" },
+      };
+    } else if (data.action === "flag") {
+      await flagNote(data.noteId);
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ success: true }),
+        headers: { "Content-Type": "application/json" },
+      };
+    } else {
+      const result = await postNewStory(data);
+      return {
+        statusCode: 200,
+        body: JSON.stringify(result),
+        headers: { "Content-Type": "application/json" },
+      };
+    }
   } else if (event.httpMethod === "GET") {
     try {
       const randomDoc = await getRandomDocument();

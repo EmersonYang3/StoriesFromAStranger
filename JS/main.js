@@ -2,11 +2,46 @@ document.addEventListener("DOMContentLoaded", () => {
   const noteForm = document.getElementById("note-form");
   const noteContent = document.getElementById("note-content");
   const noteSignature = document.getElementById("note-signature");
+  const viewExpiration = document.getElementById("view-expiration");
   const noteDisplay = document.getElementById("note-display");
   const noteText = document.getElementById("note-text");
   const noteAuthor = document.getElementById("note-author");
   const rerollButton = document.getElementById("reroll-button");
   const submitButton = noteForm.querySelector('button[type="submit"]');
+  const decrementButton = document.querySelector(".btn-decrement");
+  const incrementButton = document.querySelector(".btn-increment");
+  const upvoteButton = document.getElementById("upvote-button");
+  const downvoteButton = document.getElementById("downvote-button");
+  const flagButton = document.getElementById("flag-button");
+  const upvoteCount = document.getElementById("upvote-count");
+  const downvoteCount = document.getElementById("downvote-count");
+  const sectionContainers = document.querySelectorAll(".section-container");
+
+  let currentNoteId = null;
+
+  function updateViewExpiration(change) {
+    let value = parseInt(viewExpiration.value, 10) || 0;
+    value = Math.max(0, value + change);
+    viewExpiration.value = value;
+    updateViewExpirationUI();
+  }
+
+  function updateViewExpirationUI() {
+    const value = parseInt(viewExpiration.value, 10) || 0;
+    decrementButton.disabled = value === 0;
+  }
+
+  decrementButton.addEventListener("click", () => updateViewExpiration(-1));
+  incrementButton.addEventListener("click", () => updateViewExpiration(1));
+
+  viewExpiration.addEventListener("input", updateViewExpirationUI);
+  viewExpiration.addEventListener("change", () => {
+    let value = parseInt(viewExpiration.value, 10);
+    if (isNaN(value) || value < 0) {
+      viewExpiration.value = 0;
+    }
+    updateViewExpirationUI();
+  });
 
   async function loggingData() {
     await fetch("/.netlify/functions/userHandle");
@@ -63,6 +98,96 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  async function handleVote(type) {
+    if (!currentNoteId) return;
+
+    const button = type === "upvote" ? upvoteButton : downvoteButton;
+    const oppositeButton = type === "upvote" ? downvoteButton : upvoteButton;
+
+    button.classList.add("loading");
+    button.disabled = true;
+
+    try {
+      const response = await fetch("/.netlify/functions/databaseHandle", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ action: type, noteId: currentNoteId }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      upvoteCount.textContent = result.upvotes;
+      downvoteCount.textContent = result.downvotes;
+
+      button.classList.add("active");
+      oppositeButton.classList.remove("active");
+    } catch (error) {
+      console.error("Error voting:", error);
+    } finally {
+      button.classList.remove("loading");
+      button.disabled = false;
+    }
+  }
+
+  async function handleFlag() {
+    if (!currentNoteId) return;
+
+    flagButton.classList.add("loading");
+    flagButton.disabled = true;
+
+    try {
+      const response = await fetch("/.netlify/functions/databaseHandle", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ action: "flag", noteId: currentNoteId }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      alert("Note has been flagged for review.");
+    } catch (error) {
+      console.error("Error flagging note:", error);
+    } finally {
+      flagButton.classList.remove("loading");
+      flagButton.disabled = false;
+    }
+  }
+
+  function handleTilt(event, element) {
+    const rect = element.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+
+    const tiltX = (y - centerY) / 100;
+    const tiltY = (centerX - x) / 100;
+
+    element.style.transform = `perspective(1000px) rotateX(${-tiltX}deg) rotateY(${-tiltY}deg)`;
+  }
+
+  function resetTilt(element) {
+    element.style.transform =
+      "perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)";
+  }
+
+  sectionContainers.forEach((container) => {
+    container.addEventListener("mousemove", (event) =>
+      handleTilt(event, container)
+    );
+    container.addEventListener("mouseleave", () => resetTilt(container));
+  });
+
   loggingData();
   setRandomPlaceholder();
 
@@ -71,15 +196,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const content = noteContent.value.trim();
     const author = noteSignature.value.trim() || "Anonymous";
+    const expiration = parseInt(viewExpiration.value, 10);
 
     if (content) {
       submitButton.classList.add("loading");
       submitButton.disabled = true;
 
-      await postNewStory({ NoteContent: content, Signed: author });
+      await postNewStory({
+        NoteContent: content,
+        Signed: author,
+        ViewExpiration: expiration,
+      });
 
       noteContent.value = "";
       noteSignature.value = "";
+      viewExpiration.value = "0";
 
       submitButton.classList.remove("loading");
       submitButton.classList.add("success");
@@ -102,7 +233,20 @@ document.addEventListener("DOMContentLoaded", () => {
     noteAuthor.textContent = `- ${randomStoryData.Signed}`;
     noteDisplay.scrollTop = 0;
 
+    currentNoteId = randomStoryData._id;
+    upvoteCount.textContent = randomStoryData.upvotes || 0;
+    downvoteCount.textContent = randomStoryData.downvotes || 0;
+
+    upvoteButton.classList.remove("active");
+    downvoteButton.classList.remove("active");
+
     rerollButton.classList.remove("loading");
     rerollButton.disabled = false;
   });
+
+  upvoteButton.addEventListener("click", () => handleVote("upvote"));
+  downvoteButton.addEventListener("click", () => handleVote("downvote"));
+  flagButton.addEventListener("click", handleFlag);
+
+  updateViewExpirationUI();
 });
