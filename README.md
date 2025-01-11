@@ -14,19 +14,18 @@ This project is heavily inspired by Hunter Prosper's series _Stories From A Stra
 
 Thank you for being a part of this journey! 
 
-## Version - Latest 01/10/2025
-**v1.1.0** - Release 01/10/2025
-- New 3D Ui feature! (disbaled on mobile devices sorry!)
-- Upvote note
-- Downvote note
-- Flag vote (sends me a discord webhook with the contents!)
+## Version - Latest 01/10/2025 - 9 hours total
+**v1.1.0** - Release 01/10/2025 ~ 3 hours
+- New 3D Ui feature! (disabled on mobile devices sorry!)
+- Upvote note button with number count
+- Downvote note button with number count
+- Flag vote (sends me a discord webhook with the contents)
 - Custom view expiration!
 
-**v1.0.0** - Release 01/09/2025
+**v1.0.0** - Release 01/09/2025 ~6 hours
 - UI Overhaul (still looks really bad though ._. I'll most likely change that in the future)
 - Database Integration (MongoDB)
 - Post your story for others to see!
-- Read stories from others!
 
 ## Future Updates
 - Daily Questions (prompts such as the ones from Hunter Prosper) >> **TBD** <<
@@ -38,4 +37,7 @@ To ensure a positive experience for everyone, please follow these guidelines:
 - Be respectful and considerate of others.
 - Do not post offensive or inappropriate content.
 - Keep your notes relevant and meaningful.
-- Report any content that violates these guidelines.
+- Report any content that violates these guidelines. Reports are sent to me via a discord webhook!
+- Please suggest me ideas on my slack or my discord! Thanks! 
+
+# <3 Lucille
