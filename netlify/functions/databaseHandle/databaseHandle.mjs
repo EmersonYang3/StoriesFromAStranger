@@ -66,6 +66,7 @@ async function updateVote(noteId, voteType) {
     const updateField = voteType === "upvote" ? "upvotes" : "downvotes";
     const oppositeField = voteType === "upvote" ? "downvotes" : "upvotes";
 
+    console.log("Note ID:", noteId);
     const result = await collection.findOneAndUpdate(
       { _id: new ObjectId(noteId) },
       {
@@ -75,7 +76,10 @@ async function updateVote(noteId, voteType) {
       { returnDocument: "after" }
     );
 
+    console.log("Result Gotten Or Something:", result);
+
     if (result && result.value) {
+      console.log("Updated document:", result.value);
       return {
         upvotes: result.value.upvotes,
         downvotes: result.value.downvotes,
