@@ -31,13 +31,13 @@ async function getRandomDocument() {
       );
 
       if (
-        updatedDoc.value.views >= updatedDoc.value.ViewExpiration &&
-        updatedDoc.value.ViewExpiration > 0
+        updatedDoc.views >= updatedDoc.ViewExpiration &&
+        updatedDoc.ViewExpiration > 0
       ) {
         await collection.deleteOne({ _id: doc._id });
       }
 
-      return updatedDoc.value;
+      return updatedDoc;
     } else {
       return {
         NoteContent:
