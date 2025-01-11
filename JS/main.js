@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const sectionContainers = document.querySelectorAll(".section-container");
 
   let currentNoteId = null;
-  let vote = "None";
+  let currentVote = null;
   let flagged = false;
 
   function updateViewExpiration(change) {
@@ -75,8 +75,8 @@ document.addEventListener("DOMContentLoaded", () => {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       const data = await response.json();
+      currentVote = null;
       flagged = false;
-      vote = "None";
       return data;
     } catch (error) {
       console.log(error);
@@ -104,7 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function handleVote(type) {
     if (!currentNoteId) return;
-    if (type === vote) return;
+    if (type === currentVote) return;
 
     const button = type === "upvote" ? upvoteButton : downvoteButton;
     const oppositeButton = type === "upvote" ? downvoteButton : upvoteButton;
@@ -132,7 +132,7 @@ document.addEventListener("DOMContentLoaded", () => {
       button.classList.add("active");
       oppositeButton.classList.remove("active");
 
-      vote = type;
+      currentVote = type;
     } catch (error) {
       console.error("Error voting:", error);
     } finally {
