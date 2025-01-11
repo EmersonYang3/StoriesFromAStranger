@@ -12,7 +12,7 @@ This project is heavily inspired by Hunter Prosper's series _Stories From A Stra
 - [Instagram - Hunter Prosper](https://www.instagram.com/hunter_prosper/?hl=en)
 - [TikTok - Hunter Prosper](https://www.tiktok.com/@hunterprosper?lang=en)
 
-Thank you for being a part of this journey!
+Thank you for being a part of this journey! 
 
 ## Version
 
