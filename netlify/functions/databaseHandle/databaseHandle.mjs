@@ -68,7 +68,7 @@ async function updateVote(noteId, voteType) {
     const oppositeField = voteType === "upvote" ? "downvotes" : "upvotes";
 
     const result = await collection.findOneAndUpdate(
-      { _id: ObjectId(noteId) },
+      { _id: new ObjectId(noteId) },
       {
         $inc: { [updateField]: 1 },
         $set: { [oppositeField]: 0 },
