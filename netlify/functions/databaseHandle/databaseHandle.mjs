@@ -66,17 +66,14 @@ async function updateVote(noteId, voteType) {
     const updateField = voteType === "upvote" ? "upvotes" : "downvotes";
     const oppositeField = voteType === "upvote" ? "downvotes" : "upvotes";
 
-    console.log("Note ID:", noteId);
     const result = await collection.findOneAndUpdate(
       { _id: new ObjectId(noteId) },
       {
         $inc: { [updateField]: 1 },
-        $set: { [oppositeField]: 0 },
+        $inc: { [oppositeField]: -1 },
       },
       { returnDocument: "after" }
     );
-
-    console.log("Result Gotten Or Something:", result);
 
     if (result) {
       return {
@@ -118,8 +115,6 @@ async function flagNote(noteId) {
 }
 
 exports.handler = async (event, context) => {
-  console.log(event);
-
   if (event.httpMethod === "POST") {
     const data = JSON.parse(event.body);
 

@@ -85,7 +85,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function postNewStory(content) {
     try {
-      console.log(content);
       const response = await fetch("/.netlify/functions/databaseHandle", {
         method: "POST",
         headers: {
